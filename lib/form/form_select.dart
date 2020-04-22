@@ -96,9 +96,8 @@ class _FormSelectState extends State<FormSelect> {
               },
               isLoading: _usersIsLoading,
               onChange: (val) {
-                (widget.onChange != null)
-                    ? widget.onChange(val)
-                    : setState(() => _value = val);
+                widget.onChange(val);
+                setState(() => _value = val);
               }
     );
   }
