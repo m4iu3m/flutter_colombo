@@ -152,9 +152,21 @@ class _FormMultiSelectState extends State<FormMultiSelect> {
             : ((widget.extraParams != null) ? widget.extraParams : {});
         final res = await http.post(Uri.encodeFull(widget.service),
             body: _body, headers: {"Accept": "application/json"});
+        final _itemData = json.decode(res.body)['items'];
+        List<Map<String, String>> _resBody = [];
+        if(_itemData is Map<String, dynamic>){
+          _itemData.forEach((key, value) {
+            _resBody.add({
+              'id': value['id']??'',
+              'title': value['title']??value['label']??'',
+            });
+          });
+        }else{
+          _resBody = _itemData;
+        }
         List<SmartSelectOption> options =
         SmartSelectOption.listFrom<String, dynamic>(
-          source: json.decode(res.body)['items'],
+          source: _resBody,
           value: (index, item) => item['id'],
           title: (index, item) => item['title'],
         );

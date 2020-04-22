@@ -1,8 +1,9 @@
 import 'dart:convert';
-import '../global.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:smart_select/smart_select.dart';
+
+import '../global.dart';
 
 class FormSelect extends StatefulWidget {
   final String fileLocal;
@@ -48,57 +49,57 @@ class _FormSelectState extends State<FormSelect> {
       }
     }
     return SmartSelect<String>.single(
-              title: (widget.labelText != null) ? widget.labelText : '',
-              value: (widget.value != null) ? widget.value : _value,
-              isTwoLine: false,
-              options: _items,
-              modalType: (widget.typePopup != null)?widget.typePopup:SmartSelectModalType.bottomSheet,
-              modalConfig: SmartSelectModalConfig(
-                searchBarHint: (widget.searchBarHint != null)?widget.searchBarHint:'Tìm kiếm',
-                useHeader: (widget.showSearch != null)?widget.showSearch:false,
-                useFilter: (widget.showSearch != null)?widget.showSearch:false
-              ),
-              builder: (context, state, showOption) {
-                return InkWell(
-                  child: InputDecorator(
-                    decoration: widget.decoration ??
-                      _inputDecoration(
-                        hintText: widget.labelText,
-                        errorText: widget.errorText
+        title: (widget.labelText != null) ? widget.labelText : '',
+        value: (widget.value != null) ? widget.value : _value,
+        isTwoLine: false,
+        options: _items,
+        modalType: (widget.typePopup != null)?widget.typePopup:SmartSelectModalType.bottomSheet,
+        modalConfig: SmartSelectModalConfig(
+            searchBarHint: (widget.searchBarHint != null)?widget.searchBarHint:'Tìm kiếm',
+            useHeader: (widget.showSearch != null)?widget.showSearch:false,
+            useFilter: (widget.showSearch != null)?widget.showSearch:false
+        ),
+        builder: (context, state, showOption) {
+          return InkWell(
+            child: InputDecorator(
+              decoration: widget.decoration ??
+                  _inputDecoration(
+                      hintText: widget.labelText,
+                      errorText: widget.errorText
+                  ),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    flex: 1,
+                    child: Text(
+                      (state.value == null || state.value == '')
+                          ? state.title
+                          : state.valueDisplay,
+                      //state.valueDisplay,
+                      style: TextStyle(
+                        fontSize:
+                        (fontSizeBase != null) ? fontSizeBase : 14.0,
+                        color: Colors.black,
                       ),
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              (state.value == null || state.value == '')
-                                  ? state.title
-                                  : state.valueDisplay,
-                              //state.valueDisplay,
-                              style: TextStyle(
-                                fontSize:
-                                (fontSizeBase != null) ? fontSizeBase : 14.0,
-                                color: Colors.black,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                          ),
-                          Icon(
-                            Icons.arrow_drop_down,
-                            color: Colors.black,
-                          )
-                        ],
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                     ),
                   ),
-                  onTap: () => showOption(context),
-                );
-              },
-              isLoading: _usersIsLoading,
-              onChange: (val) {
-                widget.onChange(val);
-                setState(() => _value = val);
-              }
+                  Icon(
+                    Icons.arrow_drop_down,
+                    color: Colors.black,
+                  )
+                ],
+              ),
+            ),
+            onTap: () => showOption(context),
+          );
+        },
+        isLoading: _usersIsLoading,
+        onChange: (val) {
+          widget.onChange(val);
+          setState(() => _value = val);
+        }
     );
   }
   InputDecoration _inputDecoration({String hintText, String errorText}){
@@ -139,10 +140,22 @@ class _FormSelectState extends State<FormSelect> {
             : ((widget.extraParams != null) ? widget.extraParams : {});
         final res = await http.post(Uri.encodeFull(widget.service),
             body: json.encode(_body), headers: {"Accept": "application/json"});
+        final _itemData = json.decode(res.body)['items'];
+        List<Map<String, String>> _resBody = [];
+        if(_itemData is Map<String, dynamic>){
+          _itemData.forEach((key, value) {
+            _resBody.add({
+              'id': value['id']??'',
+              'title': value['title']??value['label']??'',
+            });
+          });
+        }else{
+          _resBody = _itemData;
+        }
         List<SmartSelectOption> options =
         SmartSelectOption.listFrom<String, dynamic>(
-          source: json.decode(res.body)['items'],
-          value: (index, item) => item['id'],
+          source: _resBody,
+          value: (index, item) => item['id'].toString(),
           title: (index, item) => item['title'],
         );
         setState(() => _items = options);

@@ -6,11 +6,12 @@ class FormGroup extends StatelessWidget{
   final String errorText;
   final bool required;
   final String note;
+  final bool notBold;
 
   const FormGroup(this.title,{
     this.required: false,
     this.errorText: '',
-    this.child, this.note,
+    this.child, this.note, this.notBold: false,
   });
   @override
   Widget build(BuildContext context) {
@@ -58,7 +59,7 @@ class FormGroup extends StatelessWidget{
         text: TextSpan(
             text: this.title,
             style: TextStyle(
-                fontWeight: FontWeight.w500,
+                fontWeight: (notBold == false)?FontWeight.w500:FontWeight.normal,
                 fontSize: fontSizeBase,
                 color: Colors.black87
             ),
@@ -78,7 +79,7 @@ class FormGroup extends StatelessWidget{
       return Text(
         this.title.toString(),
         style: TextStyle(
-            fontWeight: FontWeight.bold,
+            fontWeight: (notBold == false)?FontWeight.w500:FontWeight.normal,
             fontSize: fontSizeBase,
             color: Colors.black87
         ),
