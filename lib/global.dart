@@ -1,0 +1,1 @@
+const double fontSizeBase = 14;
