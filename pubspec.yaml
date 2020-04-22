@@ -1,7 +1,7 @@
-name: fluttercolombo
+name: flutter_colombo
 description: A new Flutter package for Colombo.
 version: 0.0.1
-author:
+author: vietlv
 homepage: https://colombo.vn
 
 environment:
