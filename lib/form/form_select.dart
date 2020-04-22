@@ -149,8 +149,13 @@ class _FormSelectState extends State<FormSelect> {
               'title': value['title']??value['label']??'',
             });
           });
-        }else{
-          _resBody = _itemData;
+        }else if(_itemData is List){
+          _itemData.forEach((element) {
+            _resBody.add({
+              'id': element['id']??'',
+              'title': element['title']??element['label']??'',
+            });
+          });
         }
         List<SmartSelectOption> options =
         SmartSelectOption.listFrom<String, dynamic>(
