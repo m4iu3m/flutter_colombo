@@ -31,9 +31,8 @@ class _FormBirthYearState extends State<FormBirthYear> {
       value: _value,
       items: _years,
       onChange: (val){
-        (widget.onChange != null)
-            ? widget.onChange(val)
-            : setState(() => _value = val);
+        setState(() => _value = val);
+        widget.onChange(val);
       },
     );
   }
