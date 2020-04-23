@@ -20,9 +20,10 @@ class FormCheckbox extends StatefulWidget {
 }
 
 class _FormCheckboxState extends State<FormCheckbox> {
-  bool _value = false;
+  bool _value;
   @override
   Widget build(BuildContext context) {
+    _value = _value??widget.value??false;
     return Container(
       color: (widget.bgColor != null) ? widget.bgColor : Colors.transparent,
       padding: (widget.padding != null) ? widget.padding : null,

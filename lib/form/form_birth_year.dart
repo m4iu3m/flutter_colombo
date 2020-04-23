@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'form_select.dart';
+import 'package:flutter_colombo/form.dart';
 
 class FormBirthYear extends StatefulWidget {
   final String label, errorText, value;
@@ -15,6 +15,7 @@ class _FormBirthYearState extends State<FormBirthYear> {
   final _year = DateTime.now().year;
   @override
   Widget build(BuildContext context) {
+    _value = (widget.value)??_value;
     return Container(
       child: _buildSelect(),
     );
@@ -35,11 +36,6 @@ class _FormBirthYearState extends State<FormBirthYear> {
         setState(() => _value = val);
       },
     );
-  }
-  @override
-  void initState() {
-    super.initState();
-    _value = widget.value;
   }
   @override
   void dispose() {
