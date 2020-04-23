@@ -2,14 +2,14 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:smart_select/smart_select.dart';
-
 import '../global.dart';
 
+// ignore: must_be_immutable
 class FormSelect extends StatefulWidget {
   final String fileLocal;
   final String service;
   final Map<String, String> items;
-  final String value;
+  String value;
   final String errorText;
   final String labelText;
   final dynamic extraParams;
@@ -37,7 +37,6 @@ class FormSelect extends StatefulWidget {
 
 class _FormSelectState extends State<FormSelect> {
   List<SmartSelectOption<String>> _items = [];
-  String _value = '';
   bool _usersIsLoading;
   var _extraParams;
   @override
@@ -50,7 +49,7 @@ class _FormSelectState extends State<FormSelect> {
     }
     return SmartSelect<String>.single(
         title: (widget.labelText != null) ? widget.labelText : '',
-        value: (widget.value != null) ? widget.value : _value,
+        value: widget.value,
         isTwoLine: false,
         options: _items,
         modalType: (widget.typePopup != null)?widget.typePopup:SmartSelectModalType.bottomSheet,
@@ -98,7 +97,7 @@ class _FormSelectState extends State<FormSelect> {
         isLoading: _usersIsLoading,
         onChange: (val) {
           widget.onChange(val);
-          setState(() => _value = val);
+          setState(() => widget.value = val);
         }
     );
   }

@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+
 import 'form_select.dart';
 
+// ignore: must_be_immutable
 class FormSelectRegionAddress extends StatefulWidget {
   final String domain;
   final Function onChangeProvince, onChangeDistrict, onChangeWard;
   final String errorProvince, errorDistrict, errorWard;
   final String labelProvince, labelDistrict, labelWard;
-  final String provinceId, districtId, wardId;
+  String provinceId, districtId, wardId;
 
-  const FormSelectRegionAddress({
+  FormSelectRegionAddress({
     Key key,
     @required this.onChangeProvince,
     @required this.onChangeDistrict,
@@ -29,12 +31,8 @@ class FormSelectRegionAddress extends StatefulWidget {
 }
 
 class _FormSelectRegionAddressState extends State<FormSelectRegionAddress> {
-  String _provinceId, _districtId, _wardId;
   @override
   Widget build(BuildContext context) {
-    _provinceId = _provinceId??widget.provinceId??null;
-    _districtId = _districtId??widget.districtId??null;
-    _wardId = _wardId??widget.wardId??null;
     return Container(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,16 +43,15 @@ class _FormSelectRegionAddressState extends State<FormSelectRegionAddress> {
               errorText: (widget.errorProvince != null)?widget.errorProvince:null,
               labelText: (widget.labelProvince != null)?widget.labelProvince:'Tỉnh, thành',
               service: widget.domain + "/api/Content/Region/selectProvinces",
-              value: _provinceId,
+              value: widget.provinceId,
               showSearch: true,
               onChange: (val) {
-                if(val != _provinceId) {
-                  widget.onChangeProvince(val);
-                  setState(() {
-                    _provinceId = val;
-                    _districtId = '';
-                  });
-                }
+                widget.onChangeProvince(val);
+                setState(() {
+                  widget.provinceId = val;
+                  widget.districtId = null;
+                  widget.wardId = null;
+                });
               },
             ),
           ),
@@ -65,15 +62,14 @@ class _FormSelectRegionAddressState extends State<FormSelectRegionAddress> {
               labelText: (widget.labelDistrict != null)?widget.labelDistrict:'Quận, huyện',
               errorText: (widget.errorDistrict != null)?widget.errorDistrict:null,
               service: widget.domain + "/api/Content/Region/selectDistricts",
-              extraParams: {'provinceId': _provinceId},
-              value: _districtId,
+              extraParams: {'provinceId': widget.provinceId},
+              value: widget.districtId,
               onChange: (val) {
-                if(val != _districtId) {
-                  widget.onChangeDistrict(val);
-                  setState(() {
-                    _districtId = val;
-                  });
-                }
+                widget.onChangeDistrict(val);
+                setState(() {
+                  widget.districtId = val;
+                  widget.wardId = null;
+                });
               },
             ),
           ),
@@ -84,15 +80,13 @@ class _FormSelectRegionAddressState extends State<FormSelectRegionAddress> {
                 labelText: (widget.labelWard != null)?widget.labelWard:'Phường, xã',
                 errorText: (widget.errorWard != null)?widget.errorWard:null,
                 service: widget.domain + "/api/Content/Region/selectWards",
-                extraParams: {'districtId': _districtId},
-                value: _wardId,
+                extraParams: {'districtId': widget.districtId},
+                value: widget.wardId,
                 onChange: (val) {
-                  if(val != _wardId) {
-                    widget.onChangeWard(val);
-                    setState(() {
-                      _wardId = val;
-                    });
-                  }
+                  widget.onChangeWard(val);
+                  setState(() {
+                    widget.wardId = val;
+                  });
                 },
               )
           ),

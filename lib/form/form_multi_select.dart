@@ -4,11 +4,12 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:smart_select/smart_select.dart';
 
+// ignore: must_be_immutable
 class FormMultiSelect extends StatefulWidget {
   final String fileLocal;
   final String service;
   final Map<String, String> items;
-  final List<String> value;
+  List<String> value;
   final String errorText;
   final String labelText;
   final dynamic extraParams;
@@ -36,7 +37,6 @@ class FormMultiSelect extends StatefulWidget {
 
 class _FormMultiSelectState extends State<FormMultiSelect> {
   List<SmartSelectOption<String>> _items = [];
-  List<String> _value = [];
   bool _usersIsLoading;
   var _extraParams;
   @override
@@ -49,8 +49,7 @@ class _FormMultiSelectState extends State<FormMultiSelect> {
     }
     return SmartSelect<String>.multiple(
           title: (widget.labelText != null) ? widget.labelText : '',
-          //value: (widget.value != null) ? widget.value : _value,
-          value: _value,
+          value: widget.value,
           isTwoLine: false,
           options: _items,
           modalType: (widget.typePopup != null)?widget.typePopup:SmartSelectModalType.bottomSheet,
@@ -110,7 +109,7 @@ class _FormMultiSelectState extends State<FormMultiSelect> {
         onChange: (val) {
           (widget.onChange != null)
               ? widget.onChange(val)
-              : setState(() => _value = val);
+              : setState(() => widget.value = val);
         }
     );
   }
