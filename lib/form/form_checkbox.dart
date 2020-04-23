@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import '../global.dart';
 
+import '../global.dart';
+// ignore: must_be_immutable
 class FormCheckbox extends StatefulWidget {
-  final bool value;
+  bool value;
   final String label;
   final ValueChanged onChange;
   final Color bgColor;
@@ -10,20 +11,17 @@ class FormCheckbox extends StatefulWidget {
   final bool fullWidth;
   FormCheckbox(
       {this.label,
-      this.value,
-      this.onChange,
-      this.bgColor,
-      this.padding,
-      this.fullWidth: true});
+        this.value,
+        this.onChange,
+        this.bgColor,
+        this.padding,
+        this.fullWidth: true});
   @override
   _FormCheckboxState createState() => _FormCheckboxState();
 }
-
 class _FormCheckboxState extends State<FormCheckbox> {
-  bool _value;
   @override
   Widget build(BuildContext context) {
-    _value = _value??widget.value??false;
     return Container(
       color: (widget.bgColor != null) ? widget.bgColor : Colors.transparent,
       padding: (widget.padding != null) ? widget.padding : null,
@@ -42,7 +40,7 @@ class _FormCheckboxState extends State<FormCheckbox> {
               ),
             ),
           )
-          :Container(
+              :Container(
             padding: EdgeInsets.only(top: 5, bottom: 5),
             child: Text(
               widget.label,
@@ -53,13 +51,13 @@ class _FormCheckboxState extends State<FormCheckbox> {
             height: 35,
             width: 30,
             child: Checkbox(
-              value: _value,
-              onChanged: (val) {
-                widget.onChange(val);
-                setState(() {
-                  _value = val;
-                });
-              }
+                value: widget.value??false,
+                onChanged: (val) {
+                  widget.onChange(val);
+                  setState(() {
+                    widget.value = val;
+                  });
+                }
             ),
           )
         ],
