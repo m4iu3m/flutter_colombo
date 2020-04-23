@@ -9,7 +9,7 @@ class FormCheckbox extends StatefulWidget {
   final EdgeInsets padding;
   final bool fullWidth;
   FormCheckbox({this.label,
-    this.value,
+    this.value:false,
     this.onChange,
     this.bgColor,
     this.padding,
