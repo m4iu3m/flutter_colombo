@@ -53,4 +53,14 @@ extension StringExtension on String {
     }
     return new DateFormat("dd/MM/yyyy").parse(_date);
   }
+
+  DateTime unixToDateTime(){
+    DateTime _date = new DateTime.now();
+    _date = new DateTime.fromMillisecondsSinceEpoch(this.parseInt() * 1000);
+    return _date;
+  }
+
+  String unixToDate(){
+    return DateFormat('dd/MM/yyyy').format(this.unixToDateTime());
+  }
 }
