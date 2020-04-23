@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'form_checkbox.dart';
+import 'package:flutter_colombo/form/form_checkbox.dart';
 
 // ignore: must_be_immutable
 class FormShowChecked extends StatefulWidget {
