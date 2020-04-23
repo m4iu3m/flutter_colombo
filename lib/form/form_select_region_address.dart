@@ -32,6 +32,9 @@ class _FormSelectRegionAddressState extends State<FormSelectRegionAddress> {
   String _provinceId, _districtId, _wardId;
   @override
   Widget build(BuildContext context) {
+    _provinceId = _provinceId??widget.provinceId??null;
+    _districtId = _districtId??widget.districtId??null;
+    _wardId = _wardId??widget.wardId??null;
     return Container(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
