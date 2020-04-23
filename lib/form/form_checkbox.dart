@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../global.dart';
 // ignore: must_be_immutable
 class FormCheckbox extends StatefulWidget {
@@ -9,16 +8,17 @@ class FormCheckbox extends StatefulWidget {
   final Color bgColor;
   final EdgeInsets padding;
   final bool fullWidth;
-  FormCheckbox(
-      {this.label,
-        this.value,
-        this.onChange,
-        this.bgColor,
-        this.padding,
-        this.fullWidth: true});
+  FormCheckbox({this.label,
+    this.value,
+    this.onChange,
+    this.bgColor,
+    this.padding,
+    this.fullWidth: true
+  });
   @override
   _FormCheckboxState createState() => _FormCheckboxState();
 }
+
 class _FormCheckboxState extends State<FormCheckbox> {
   @override
   Widget build(BuildContext context) {
@@ -51,7 +51,7 @@ class _FormCheckboxState extends State<FormCheckbox> {
             height: 35,
             width: 30,
             child: Checkbox(
-                value: widget.value??false,
+                value: widget.value,
                 onChanged: (val) {
                   widget.onChange(val);
                   setState(() {
