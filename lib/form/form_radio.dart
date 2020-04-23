@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class FormRadio extends StatefulWidget {
   final Function onChange;
   final Map<String, String> listValues;
-  final String groupValue;
+  String groupValue;
   final double space;
   final Axis direction;
 
@@ -13,7 +14,6 @@ class FormRadio extends StatefulWidget {
 }
 
 class _FormRadioState extends State<FormRadio> {
-  String _character = '';
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -33,11 +33,11 @@ class _FormRadioState extends State<FormRadio> {
             width: 30,
             child: Radio(
                 value: key,
-                groupValue: _character,
+                groupValue: widget.groupValue,
                 onChanged: (val) {
                   widget.onChange(val);
                   setState(() {
-                    _character = val;
+                    widget.groupValue = val;
                   });
                 }
             ),
@@ -58,11 +58,6 @@ class _FormRadioState extends State<FormRadio> {
     return Row(
       children: _list,
     );
-  }
-  @override
-  void initState() {
-    super.initState();
-    _character = widget.groupValue;
   }
   @override
   void dispose() {
