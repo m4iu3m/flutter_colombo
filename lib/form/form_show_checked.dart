@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'form_checkbox.dart';
 
+// ignore: must_be_immutable
 class FormShowChecked extends StatefulWidget {
   final String label;
   final bool fullWidth;
-  final bool value;
+  bool value;
   final Widget child;
   final Function onChange;
   FormShowChecked({
@@ -14,13 +15,11 @@ class FormShowChecked extends StatefulWidget {
     this.child,
     this.onChange
   });
-
   @override
   _FormShowCheckedState createState() => _FormShowCheckedState();
 }
 
 class _FormShowCheckedState extends State<FormShowChecked> {
-  bool _value = false;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -29,23 +28,21 @@ class _FormShowCheckedState extends State<FormShowChecked> {
           FormCheckbox(
             fullWidth: widget.fullWidth,
             label: widget.label,
-            value: _value,
+            value: widget.value,
             onChange: (val) {
               setState(() {
-                _value = val;
+                widget.value = val;
               });
               widget.onChange(val);
             },
           ),
-          (widget.child != null && _value == true)?widget.child:Container()
+          (widget.child != null && widget.value == true)?widget.child:Container()
         ],
       ),
     );
   }
-
   @override
-  void initState() {
-    super.initState();
-    _value = widget.value;
+  void dispose() {
+    super.dispose();
   }
 }
