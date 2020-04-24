@@ -55,7 +55,6 @@ extension StringExtension on String {
       return this;
     }
     return this;
-
   }
   bool notEmpty(){
     return (this != null && this.trim() != '');
