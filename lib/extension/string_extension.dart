@@ -21,6 +21,21 @@ extension StringExtension on String {
     );
     return _reExp.hasMatch(this);
   }
+  double ratio(){
+    if(this != null && this != ''){
+      RegExp _reExp = new RegExp(
+          r"(\d+)\:(\d+)",
+          caseSensitive: false,
+          multiLine: false
+      );
+      final Iterable<Match> _matches = _reExp.allMatches(this.toString());
+      for (Match m in _matches) {
+        double _ratio = int.parse(m.group(1)) / int.parse(m.group(2));
+        return _ratio;
+      }
+    }
+    return 16/9;
+  }
   bool notEmpty(){
     return (this != null && this.trim() != '');
   }
