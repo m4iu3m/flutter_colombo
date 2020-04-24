@@ -36,6 +36,27 @@ extension StringExtension on String {
     }
     return 16/9;
   }
+  String thumb(dynamic ratio, [double width]){
+    final double _width = width??480;
+    if(ratio is String){
+      ratio = ratio.ratio();
+    }
+    if(ratio is double){
+      if(this.indexOf('upload/') == 0){
+        RegExp _reExp = new RegExp(
+            r"(\d+)",
+            caseSensitive: false,
+            multiLine: false
+        );
+        final Match _matches = _reExp.firstMatch(this.toString());
+        final String _site = _matches[0].toString();
+        return '/publish/thumbnail/$_site/${_width}x${_width/ratio}xdefault/$this';
+      }
+      return this;
+    }
+    return this;
+
+  }
   bool notEmpty(){
     return (this != null && this.trim() != '');
   }
