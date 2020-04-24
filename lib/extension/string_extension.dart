@@ -50,7 +50,7 @@ extension StringExtension on String {
         );
         final Match _matches = _reExp.firstMatch(this.toString());
         final String _site = _matches[0].toString();
-        return '/publish/thumbnail/$_site/${_width}x${_width/ratio}xdefault/$this';
+        return '/publish/thumbnail/$_site/${_width.ceil()}x${(_width/ratio).ceil()}xdefault/$this';
       }
       return this;
     }
