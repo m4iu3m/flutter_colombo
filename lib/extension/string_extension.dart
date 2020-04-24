@@ -1,5 +1,3 @@
-import 'package:intl/intl.dart';
-
 extension StringExtension on String {
   int parseInt() {
     return int.parse(this);
@@ -25,42 +23,5 @@ extension StringExtension on String {
   }
   bool notEmpty(){
     return (this != null && this.trim() != '');
-  }
-  DateTime toDateTime(){
-    String _date = DateFormat('dd/MM/yyyy').format(new DateTime.now());
-    RegExp _reExp = new RegExp(
-        r"^\s*(\d{1,2})[\-\/]{1}(\d{1,2})[\-\/]{1}(\d{4}|\d{2})\s*$",
-        caseSensitive: false,
-        multiLine: false
-    );
-    if(_reExp.hasMatch(this) == true){
-      final int _currentYear = DateTime.now().year.toString().substring(2).parseInt(),
-          _currentStart = DateTime.now().year.toString().substring(0,2).parseInt();
-      final Iterable<Match> _matches = _reExp.allMatches(this);
-      for (Match m in _matches) {
-        String _day = (m.group(1).toString().length == 1)?m.group(1):'0${m.group(1)}',
-            _month = (m.group(2).toString().length == 1)?m.group(2):'0${m.group(2)}',
-            _year = m.group(3);
-        if(_year.toString().length == 2){
-          if(_year.parseInt() <= _currentYear){
-            _year = '$_currentStart$_year';
-          }else{
-            _year = '${_currentStart - 1}$_year';
-          }
-        }
-        _date = '$_day/$_month/$_year';
-      }
-    }
-    return new DateFormat("dd/MM/yyyy").parse(_date);
-  }
-
-  DateTime unixToDateTime(){
-    DateTime _date = new DateTime.now();
-    _date = new DateTime.fromMillisecondsSinceEpoch(this.parseInt() * 1000);
-    return _date;
-  }
-
-  String unixToDate(){
-    return DateFormat('dd/MM/yyyy').format(this.unixToDateTime());
   }
 }
