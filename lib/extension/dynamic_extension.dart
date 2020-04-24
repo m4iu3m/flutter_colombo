@@ -40,7 +40,7 @@ extension DynamicExtension on dynamic{
     String _format = format ?? 'dd/MM/yyyy';
     if(this != null) {
       if((this is String || this is num)) {
-        return DateFormat(_format).format(this.toDateTime());
+        return DateFormat(_format).format(this.toString().toDateTime());
       }
     }
     return '';
