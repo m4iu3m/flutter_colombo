@@ -89,19 +89,20 @@ extension StringExtension on String {
                   height: double.infinity,
                   color: Color(0xffeaeaea),
                 ),
-                Image.network(_image),
+                Image.network(_image, fit: BoxFit.cover, height: double.infinity,),
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(50)),
+                    border: Border.all(color: Color.fromRGBO(255, 255, 255, 0.7), width: 5),
                     boxShadow: [
                       BoxShadow(
-                        blurRadius: 10,
-                        spreadRadius: 10,
-                        color: Color.fromRGBO(0, 0, 0, 0.2)
+                          blurRadius: 5,
+                          spreadRadius: 5,
+                          color: Color.fromRGBO(0, 0, 0, 0.1)
                       )
-                    ]
+                    ],
                   ),
-                  child: Icon(Icons.play_circle_filled, size: 50,color: Color.fromRGBO(255, 255, 255, 0.9))
+                  child: Icon(Icons.play_circle_filled, size: 50,color: Color.fromRGBO(255, 255, 255, 0.7))
                 )
               ],
               alignment: Alignment.center,
