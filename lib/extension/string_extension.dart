@@ -1,3 +1,7 @@
+import 'package:flutter/material.dart';
+import '../widgets/helper/video_play.dart';
+import 'package:flutter_youtube/flutter_youtube.dart';
+
 extension StringExtension on String {
   int parseInt() {
     return int.parse(this);
@@ -58,5 +62,52 @@ extension StringExtension on String {
   }
   bool notEmpty(){
     return (this != null && this.trim() != '');
+  }
+  Widget playVideo(){
+    RegExp _reExpId = new RegExp(
+        r'(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})',
+        caseSensitive: false,
+        multiLine: false
+    );
+    final Match match = _reExpId.firstMatch(this);
+    if(match[1] != null && match[1].length > 10){
+      final String _image = 'https://i.ytimg.com/vi/${match[1]}/maxresdefault.jpg';
+      return Container(
+        child: InkWell(
+          onTap: (){
+            FlutterYoutube.playYoutubeVideoByUrl(
+                apiKey: "AIzaSyDvEii3etFTLNy4l6fU553jL1Wz3OLB4PM",
+                videoUrl: "https://www.youtube.com/watch?v=${match[1]}",
+                autoPlay: true
+            );
+          },
+          child: Stack(
+            children: <Widget>[
+              AspectRatio(
+                child: Image.network(_image),
+                aspectRatio: 1.5,
+              ),
+              Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(50)),
+                      boxShadow: [
+                        BoxShadow(
+                            blurRadius: 10,
+                            spreadRadius: 10,
+                            color: Color.fromRGBO(0, 0, 0, 0.2)
+                        )
+                      ]
+                  ),
+                  child: Icon(Icons.play_circle_filled, size: 50,color: Color.fromRGBO(255, 255, 255, 0.9))
+              )
+            ],
+            alignment: Alignment.center,
+          ),
+        ),
+      );
+    }
+    return Container(
+      child: VideoPlay(this),
+    );
   }
 }
