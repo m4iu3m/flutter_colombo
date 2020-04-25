@@ -81,27 +81,32 @@ extension StringExtension on String {
                 autoPlay: true
             );
           },
-          child: Stack(
-            children: <Widget>[
-              AspectRatio(
-                child: Image.network(_image),
-                aspectRatio: 1.5,
-              ),
-              Container(
+          child: AspectRatio(
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  color: Color(0xffeaeaea),
+                ),
+                Image.network(_image),
+                Container(
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(50)),
-                      boxShadow: [
-                        BoxShadow(
-                            blurRadius: 10,
-                            spreadRadius: 10,
-                            color: Color.fromRGBO(0, 0, 0, 0.2)
-                        )
-                      ]
+                    borderRadius: BorderRadius.all(Radius.circular(50)),
+                    boxShadow: [
+                      BoxShadow(
+                          blurRadius: 10,
+                          spreadRadius: 10,
+                          color: Color.fromRGBO(0, 0, 0, 0.2)
+                      )
+                    ]
                   ),
                   child: Icon(Icons.play_circle_filled, size: 50,color: Color.fromRGBO(255, 255, 255, 0.9))
-              )
-            ],
-            alignment: Alignment.center,
+                )
+              ],
+              alignment: Alignment.center,
+            ),
+            aspectRatio: 1.5,
           ),
         ),
       );
