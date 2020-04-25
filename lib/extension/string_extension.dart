@@ -76,9 +76,9 @@ extension StringExtension on String {
         child: InkWell(
           onTap: (){
             FlutterYoutube.playYoutubeVideoByUrl(
-                apiKey: "AIzaSyDvEii3etFTLNy4l6fU553jL1Wz3OLB4PM",
-                videoUrl: "https://www.youtube.com/watch?v=${match[1]}",
-                autoPlay: true
+              apiKey: "AIzaSyDvEii3etFTLNy4l6fU553jL1Wz3OLB4PM",
+              videoUrl: "https://www.youtube.com/watch?v=${match[1]}",
+              autoPlay: true
             );
           },
           child: AspectRatio(
@@ -95,9 +95,9 @@ extension StringExtension on String {
                     borderRadius: BorderRadius.all(Radius.circular(50)),
                     boxShadow: [
                       BoxShadow(
-                          blurRadius: 10,
-                          spreadRadius: 10,
-                          color: Color.fromRGBO(0, 0, 0, 0.2)
+                        blurRadius: 10,
+                        spreadRadius: 10,
+                        color: Color.fromRGBO(0, 0, 0, 0.2)
                       )
                     ]
                   ),
