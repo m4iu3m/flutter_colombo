@@ -40,7 +40,7 @@ extension StringExtension on String {
     }
     return 16/9;
   }
-  String thumb(dynamic ratio, [double width]){
+  String thumb(dynamic ratio, [double width, String domain]){
     final double _width = width??480;
     if(ratio is String){
       ratio = ratio.ratio();
@@ -54,7 +54,7 @@ extension StringExtension on String {
         );
         final Match _matches = _reExp.firstMatch(this.toString());
         final String _site = _matches[0].toString();
-        return '/publish/thumbnail/$_site/${_width.ceil()}x${(_width/ratio).ceil()}xdefault/$this';
+        return '${domain??''}/publish/thumbnail/$_site/${_width.ceil()}x${(_width/ratio).ceil()}xdefault/$this';
       }
       return this;
     }
