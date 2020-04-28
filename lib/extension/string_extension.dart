@@ -40,6 +40,9 @@ extension StringExtension on String {
     }
     return 16/9;
   }
+
+
+
   String thumb(dynamic ratio, [double width, String domain]){
     final double _width = width??480;
     if(ratio is String){

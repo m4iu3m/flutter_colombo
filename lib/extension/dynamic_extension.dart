@@ -1,6 +1,15 @@
 import 'package:intl/intl.dart';
 
 extension DynamicExtension on dynamic{
+
+  String number([String suffix]){
+    final _number = new NumberFormat("#,##0", "vi_VN");
+    String _result = '0';
+    _result = _number.format(int.parse(this.toString())).toString();
+    _result = (suffix != null)?'$_result$suffix':_result;
+    return _result;
+  }
+
   DateTime toDateTime() {
     if (this == null || this == '') {
       return new DateTime.now();
