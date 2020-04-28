@@ -44,6 +44,8 @@ extension StringExtension on String {
     final double _width = width??480;
     if(ratio is String){
       ratio = ratio.ratio();
+    }else if(ratio is int){
+      ratio = double.parse(ratio.toString());
     }
     if(ratio is double){
       if(this.indexOf('upload/') == 0){
