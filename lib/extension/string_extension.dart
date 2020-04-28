@@ -74,48 +74,55 @@ extension StringExtension on String {
         caseSensitive: false,
         multiLine: false
     );
-    final Match match = _reExpId.firstMatch(this);
-    if(match[1] != null && match[1].length > 10){
-      final String _image = 'https://i.ytimg.com/vi/${match[1]}/maxresdefault.jpg';
-      return Container(
-        child: InkWell(
-          onTap: (){
-            FlutterYoutube.playYoutubeVideoByUrl(
-              apiKey: "AIzaSyDvEii3etFTLNy4l6fU553jL1Wz3OLB4PM",
-              videoUrl: "https://www.youtube.com/watch?v=${match[1]}",
-              autoPlay: true
-            );
-          },
-          child: AspectRatio(
-            child: Stack(
-              children: <Widget>[
-                Container(
-                  width: double.infinity,
-                  height: double.infinity,
-                  color: Color(0xffeaeaea),
-                ),
-                Image.network(_image, fit: BoxFit.cover, height: double.infinity,),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(50)),
-                    border: Border.all(color: Color.fromRGBO(255, 255, 255, 0.7), width: 5),
-                    boxShadow: [
-                      BoxShadow(
-                          blurRadius: 5,
-                          spreadRadius: 5,
-                          color: Color.fromRGBO(0, 0, 0, 0.1)
-                      )
-                    ],
+
+    if(_reExpId.hasMatch(this)) {
+      final Match match = _reExpId.firstMatch(this);
+      if (match[1] != null && match[1].length > 10) {
+        final String _image = 'https://i.ytimg.com/vi/${match[1]}/maxresdefault.jpg';
+        return Container(
+          child: InkWell(
+            onTap: () {
+              FlutterYoutube.playYoutubeVideoByUrl(
+                  apiKey: "AIzaSyDvEii3etFTLNy4l6fU553jL1Wz3OLB4PM",
+                  videoUrl: "https://www.youtube.com/watch?v=${match[1]}",
+                  autoPlay: true
+              );
+            },
+            child: AspectRatio(
+              child: Stack(
+                children: <Widget>[
+                  Container(
+                    width: double.infinity,
+                    height: double.infinity,
+                    color: Color(0xffeaeaea),
                   ),
-                  child: Icon(Icons.play_circle_filled, size: 50,color: Color.fromRGBO(255, 255, 255, 0.7))
-                )
-              ],
-              alignment: Alignment.center,
+                  Image.network(
+                    _image, fit: BoxFit.cover, height: double.infinity,),
+                  Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(50)),
+                        border: Border.all(
+                            color: Color.fromRGBO(255, 255, 255, 0.7),
+                            width: 5),
+                        boxShadow: [
+                          BoxShadow(
+                              blurRadius: 5,
+                              spreadRadius: 5,
+                              color: Color.fromRGBO(0, 0, 0, 0.1)
+                          )
+                        ],
+                      ),
+                      child: Icon(Icons.play_circle_filled, size: 50,
+                          color: Color.fromRGBO(255, 255, 255, 0.7))
+                  )
+                ],
+                alignment: Alignment.center,
+              ),
+              aspectRatio: 1.5,
             ),
-            aspectRatio: 1.5,
           ),
-        ),
-      );
+        );
+      }
     }
     return Container(
       child: VideoPlay(this),
