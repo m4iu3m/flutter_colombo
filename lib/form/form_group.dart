@@ -61,7 +61,6 @@ class FormGroup extends StatelessWidget{
             style: TextStyle(
                 fontWeight: (notBold == false)?FontWeight.w500:FontWeight.normal,
                 fontSize: fontSizeBase,
-                color: Colors.black87
             ),
             children: <TextSpan>[
               TextSpan(
