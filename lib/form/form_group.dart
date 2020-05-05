@@ -20,7 +20,7 @@ class FormGroup extends StatelessWidget{
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          _label(),
+          _label(context),
           _errorText(),
           this.child,
           SizedBox(
@@ -53,15 +53,12 @@ class FormGroup extends StatelessWidget{
       return SizedBox(height: 5,);
     }
   }
-  Widget _label(){
+  Widget _label(BuildContext context){
     if(required == true){
       return RichText(
         text: TextSpan(
             text: this.title,
-            style: TextStyle(
-                fontWeight: (notBold == false)?FontWeight.w500:FontWeight.normal,
-                fontSize: fontSizeBase,
-            ),
+            style: Theme.of(context).textTheme.bodyText1,
             children: <TextSpan>[
               TextSpan(
                 text: ' (*)',
