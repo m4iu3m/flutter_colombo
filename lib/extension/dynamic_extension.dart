@@ -54,4 +54,19 @@ extension DynamicExtension on dynamic{
     }
     return '';
   }
+  bool empty(){
+    return (this == null || this.toString().trim() == '');
+  }
+  bool invalidEmail(){
+    if(this != null && this.toString().trim() != '') {
+      RegExp _reExp = new RegExp(
+          r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$",
+          caseSensitive: false,
+          multiLine: false
+      );
+      return !_reExp.hasMatch(this);
+    }else{
+      return false;
+    }
+  }
 }
