@@ -72,7 +72,7 @@ extension DynamicExtension on dynamic{
   }
   bool invalidPhoneVN() {
     if(this != null && this.toString().trim() != '') {
-      return !this.StringExtension.isPhoneVN();
+      return !this.toString().isPhoneVN();
     }else{
       return false;
     }
