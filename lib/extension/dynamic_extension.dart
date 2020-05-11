@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
-
+import 'string_extension.dart';
 extension DynamicExtension on dynamic{
+
 
   String number([String suffix]){
     final _number = new NumberFormat("#,##0", "vi_VN");
@@ -65,6 +66,13 @@ extension DynamicExtension on dynamic{
           multiLine: false
       );
       return !_reExp.hasMatch(this);
+    }else{
+      return false;
+    }
+  }
+  bool invalidPhoneVN() {
+    if(this != null && this.toString().trim() != '') {
+      return !this.StringExtension.isPhoneVN();
     }else{
       return false;
     }
