@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:smart_select/smart_select.dart';
 import 'package:dio/dio.dart';
+import 'package:smart_select/smart_select.dart';
 
 // ignore: must_be_immutable
 class FormSelect extends StatefulWidget {
@@ -17,6 +17,7 @@ class FormSelect extends StatefulWidget {
   final bool showSearch;
   final String searchBarHint;
   final InputDecoration decoration;
+  final IconData icon;
   FormSelect({
     this.fileLocal,
     this.service,
@@ -28,7 +29,7 @@ class FormSelect extends StatefulWidget {
     this.onChange,
     this.typePopup,
     this.showSearch,
-    this.searchBarHint, this.decoration
+    this.searchBarHint, this.decoration, this.icon
   });
   @override
   _FormSelectState createState() => _FormSelectState();
@@ -61,17 +62,26 @@ class _FormSelectState extends State<FormSelect> {
         builder: (context, state, showOption) {
           return InkWell(
             onTap: () => showOption(context),
-            child: TextFormField(
-              controller: TextEditingController()..text =  state.valueTitle??null,
-              enabled: false,
-              maxLines: 1,
-              decoration:  widget.decoration ??
-                  InputDecoration(
-                      labelText:  state.title,
-                      errorText:  widget.errorText,
-                      border: UnderlineInputBorder(borderSide: BorderSide()),
-                      contentPadding: EdgeInsets.only(bottom: 2.0)
+            child: Stack(
+                alignment: Alignment.centerRight,
+                children: <Widget>[
+                  TextFormField(
+                    controller: TextEditingController()..text =  state.valueTitle??null,
+                    enabled: false,
+                    maxLines: 1,
+                    decoration:  widget.decoration ??
+                        InputDecoration(
+                            labelText:  state.title,
+                            errorText:  widget.errorText,
+                            border: UnderlineInputBorder(borderSide: BorderSide()),
+                            contentPadding: EdgeInsets.only(bottom: 2.0, right: 25)
+                        ),
                   ),
+                  Positioned(
+                      right: 5,
+                      child: Icon(widget.icon??Icons.keyboard_arrow_down, size: 18,)
+                  )
+                ]
             ),
           );
         },

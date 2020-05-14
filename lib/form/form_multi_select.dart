@@ -17,6 +17,7 @@ class FormMultiSelect extends StatefulWidget {
   final bool showSearch;
   final String searchBarHint;
   final InputDecoration decoration;
+  final IconData icon;
   FormMultiSelect({
     this.fileLocal,
     this.service,
@@ -28,7 +29,7 @@ class FormMultiSelect extends StatefulWidget {
     this.onChange,
     this.typePopup,
     this.showSearch,
-    this.searchBarHint, this.decoration
+    this.searchBarHint, this.decoration, this.icon
   });
   @override
   _FormMultiSelectState createState() => _FormMultiSelectState();
@@ -61,17 +62,26 @@ class _FormMultiSelectState extends State<FormMultiSelect> {
         builder: (context, state, showOption) {
           return InkWell(
             onTap: () => showOption(context),
-            child: TextFormField(
-              controller: TextEditingController()..text =  state.valueTitle??null,
-              enabled: false,
-              maxLines: 1,
-              decoration:  widget.decoration ??
-                  InputDecoration(
-                      labelText:  state.title,
-                      errorText:  widget.errorText,
-                      border: UnderlineInputBorder(borderSide: BorderSide()),
-                      contentPadding: EdgeInsets.only(bottom: 2.0)
-                  ),
+            child: Stack(
+              alignment: Alignment.centerRight,
+              children: <Widget>[
+                TextFormField(
+                  controller: TextEditingController()..text =  state.valueTitle??null,
+                  enabled: false,
+                  maxLines: 1,
+                  decoration:  widget.decoration ??
+                      InputDecoration(
+                          labelText:  state.title,
+                          errorText:  widget.errorText,
+                          border: UnderlineInputBorder(borderSide: BorderSide()),
+                          contentPadding: EdgeInsets.only(bottom: 2.0)
+                      ),
+                ),
+                Positioned(
+                    right: 5,
+                    child: Icon(widget.icon??Icons.keyboard_arrow_down, size: 18,)
+                )
+              ],
             ),
           );
         },
