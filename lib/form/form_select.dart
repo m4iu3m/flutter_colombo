@@ -18,19 +18,21 @@ class FormSelect extends StatefulWidget {
   final String searchBarHint;
   final InputDecoration decoration;
   final IconData icon;
-  FormSelect({
-    this.fileLocal,
-    this.service,
-    this.items,
-    this.value,
-    this.errorText,
-    this.labelText,
-    this.extraParams,
-    this.onChange,
-    this.typePopup,
-    this.showSearch,
-    this.searchBarHint, this.decoration, this.icon
-  });
+  final String emptyDataText;
+  FormSelect(
+      {this.fileLocal,
+        this.service,
+        this.items,
+        this.value,
+        this.errorText,
+        this.labelText,
+        this.extraParams,
+        this.onChange,
+        this.typePopup,
+        this.showSearch,
+        this.searchBarHint,
+        this.decoration,
+        this.icon, this.emptyDataText});
   @override
   _FormSelectState createState() => _FormSelectState();
 }
@@ -53,45 +55,69 @@ class _FormSelectState extends State<FormSelect> {
         value: widget.value,
         isTwoLine: false,
         options: _items,
-        modalType: (widget.typePopup != null)?widget.typePopup:SmartSelectModalType.bottomSheet,
+        modalType: (widget.typePopup != null)
+            ? widget.typePopup
+            : SmartSelectModalType.bottomSheet,
         modalConfig: SmartSelectModalConfig(
-          searchBarHint: (widget.searchBarHint != null)?widget.searchBarHint:'Tìm kiếm',
-          useHeader: (widget.showSearch != null)?widget.showSearch:false,
-          useFilter: (widget.showSearch != null)?widget.showSearch:false,
+          searchBarHint: (widget.searchBarHint != null)
+              ? widget.searchBarHint
+              : 'Tìm kiếm',
+          useHeader: (widget.showSearch != null) ? widget.showSearch : false,
+          useFilter: (widget.showSearch != null) ? widget.showSearch : false,
         ),
+        choiceConfig: SmartSelectChoiceConfig(emptyBuilder: (String string) {
+          return Container(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(Icons.search, size: 120.0, color: Colors.black12),
+                  Container(height: 25),
+                  Text(
+                    widget.emptyDataText??'Không có dữ liệu',
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline6
+                        .merge(TextStyle(color: Colors.black54)),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }),
         builder: (context, state, showOption) {
           return InkWell(
             onTap: () => showOption(context),
-            child: Stack(
-                alignment: Alignment.centerRight,
-                children: <Widget>[
-                  TextFormField(
-                    controller: TextEditingController()..text =  state.valueTitle??null,
-                    enabled: false,
-                    maxLines: 1,
-                    decoration:  widget.decoration ??
-                        InputDecoration(
-                            labelText:  state.title,
-                            errorText:  widget.errorText,
-                            border: UnderlineInputBorder(borderSide: BorderSide()),
-                            contentPadding: EdgeInsets.only(bottom: 2.0, right: 25)
-                        ),
-                  ),
-                  Positioned(
-                      right: 5,
-                      child: Icon(widget.icon??Icons.keyboard_arrow_down, size: 18,)
-                  )
-                ]
-            ),
+            child: Stack(alignment: Alignment.centerRight, children: <Widget>[
+              TextFormField(
+                controller: TextEditingController()
+                  ..text = state.valueTitle ?? null,
+                enabled: false,
+                maxLines: 1,
+                decoration: widget.decoration ??
+                    InputDecoration(
+                        labelText: state.title,
+                        errorText: widget.errorText,
+                        border: UnderlineInputBorder(borderSide: BorderSide()),
+                        contentPadding:
+                        EdgeInsets.only(bottom: 2.0, right: 25)),
+              ),
+              Positioned(
+                  right: 5,
+                  child: Icon(
+                    widget.icon ?? Icons.keyboard_arrow_down,
+                    size: 18,
+                  ))
+            ]),
           );
         },
         isLoading: _usersIsLoading,
         onChange: (val) {
           widget.onChange(val);
           setState(() => widget.value = val);
-        }
-    );
+        });
   }
+
   @override
   initState() {
     super.initState();
@@ -106,26 +132,26 @@ class _FormSelectState extends State<FormSelect> {
             ? extras
             : ((widget.extraParams != null) ? widget.extraParams : null);
         var _res;
-        if(_body != null) {
+        if (_body != null) {
           FormData formData = new FormData.fromMap(_body);
           _res = await _dio.post(widget.service, data: formData);
-        }else{
+        } else {
           _res = await _dio.get(widget.service);
         }
         final _itemData = json.decode(_res.data)['items'];
         List<Map<String, String>> _resBody = [];
-        if(_itemData is Map<String, dynamic>){
+        if (_itemData is Map<String, dynamic>) {
           _itemData.forEach((key, value) {
             _resBody.add({
-              'id': value['id']??'',
-              'title': value['title']??value['label']??'',
+              'id': value['id'] ?? '',
+              'title': value['title'] ?? value['label'] ?? '',
             });
           });
-        }else if(_itemData is List){
+        } else if (_itemData is List) {
           _itemData.forEach((element) {
             _resBody.add({
-              'id': element['id']??'',
-              'title': element['title']??element['label']??'',
+              'id': element['id'] ?? '',
+              'title': element['title'] ?? element['label'] ?? '',
             });
           });
         }
@@ -164,6 +190,7 @@ class _FormSelectState extends State<FormSelect> {
       _usersIsLoading = false;
     }
   }
+
   @override
   void dispose() {
     _dio.close();
