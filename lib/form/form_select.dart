@@ -38,6 +38,7 @@ class FormSelect extends StatefulWidget {
 }
 
 class _FormSelectState extends State<FormSelect> {
+  bool _showSearch;
   final _dio = Dio();
   List<SmartSelectOption<String>> _items = [];
   bool _usersIsLoading;
@@ -62,8 +63,8 @@ class _FormSelectState extends State<FormSelect> {
           searchBarHint: (widget.searchBarHint != null)
               ? widget.searchBarHint
               : 'Tìm kiếm',
-          useHeader: (widget.showSearch != null) ? widget.showSearch : false,
-          useFilter: (widget.showSearch != null) ? widget.showSearch : false,
+          useHeader: (widget.showSearch != null) ? _showSearch??widget.showSearch : false,
+          useFilter: (widget.showSearch != null) ? _showSearch??widget.showSearch : false,
         ),
         choiceConfig: SmartSelectChoiceConfig(emptyBuilder: (String string) {
           return Container(
@@ -121,6 +122,7 @@ class _FormSelectState extends State<FormSelect> {
   @override
   initState() {
     super.initState();
+    _showSearch = widget.showSearch;
     _getData();
   }
 
@@ -161,7 +163,12 @@ class _FormSelectState extends State<FormSelect> {
           value: (index, item) => item['id'].toString(),
           title: (index, item) => item['title'],
         );
-        setState(() => _items = options);
+        setState(() {
+          if(options.length < 10){
+            _items = options;
+            _showSearch = false;
+          }
+        });
       } else {
         if (widget.items != null) {
           List<Map<String, String>> _resBody = [];
