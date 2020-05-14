@@ -1,8 +1,7 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:smart_select/smart_select.dart';
-import '../global.dart';
+import 'package:dio/dio.dart';
 
 // ignore: must_be_immutable
 class FormSelect extends StatefulWidget {
@@ -36,6 +35,7 @@ class FormSelect extends StatefulWidget {
 }
 
 class _FormSelectState extends State<FormSelect> {
+  final _dio = Dio();
   List<SmartSelectOption<String>> _items = [];
   bool _usersIsLoading;
   var _extraParams;
@@ -54,44 +54,25 @@ class _FormSelectState extends State<FormSelect> {
         options: _items,
         modalType: (widget.typePopup != null)?widget.typePopup:SmartSelectModalType.bottomSheet,
         modalConfig: SmartSelectModalConfig(
-            searchBarHint: (widget.searchBarHint != null)?widget.searchBarHint:'Tìm kiếm',
-            useHeader: (widget.showSearch != null)?widget.showSearch:false,
-            useFilter: (widget.showSearch != null)?widget.showSearch:false
+          searchBarHint: (widget.searchBarHint != null)?widget.searchBarHint:'Tìm kiếm',
+          useHeader: (widget.showSearch != null)?widget.showSearch:false,
+          useFilter: (widget.showSearch != null)?widget.showSearch:false,
         ),
         builder: (context, state, showOption) {
           return InkWell(
-            child: InputDecorator(
-              decoration: widget.decoration ??
-                  _inputDecoration(
-                      hintText: widget.labelText,
-                      errorText: widget.errorText
-                  ),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    flex: 1,
-                    child: Text(
-                      (state.value == null || state.value == '')
-                          ? state.title
-                          : state.valueDisplay,
-                      //state.valueDisplay,
-                      style: TextStyle(
-                        fontSize:
-                        (fontSizeBase != null) ? fontSizeBase : 14.0,
-                        color: Colors.black,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
-                  ),
-                  Icon(
-                    Icons.arrow_drop_down,
-                    color: Colors.black,
-                  )
-                ],
-              ),
-            ),
             onTap: () => showOption(context),
+            child: TextFormField(
+              controller: TextEditingController()..text =  state.valueTitle??null,
+              enabled: false,
+              maxLines: 1,
+              decoration:  widget.decoration ??
+                  InputDecoration(
+                      labelText:  state.title,
+                      errorText:  widget.errorText,
+                      border: UnderlineInputBorder(borderSide: BorderSide()),
+                      contentPadding: EdgeInsets.only(bottom: 2.0)
+                  ),
+            ),
           );
         },
         isLoading: _usersIsLoading,
@@ -99,29 +80,6 @@ class _FormSelectState extends State<FormSelect> {
           widget.onChange(val);
           setState(() => widget.value = val);
         }
-    );
-  }
-  InputDecoration _inputDecoration({String hintText, String errorText}){
-    return InputDecoration(
-      hintText: hintText,
-      errorText: errorText,
-      contentPadding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(5)),
-        borderSide: BorderSide(color: Color(0xFFCCCCCC), width: 1),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(5)),
-        borderSide: BorderSide(color: Colors.blue, width: 1),
-      ),
-      focusedErrorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(5)),
-        borderSide: BorderSide(color: Colors.red, width: 1),
-      ),
-      errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(5)),
-        borderSide: BorderSide(color: Colors.red, width: 1),
-      ),
     );
   }
   @override
@@ -136,10 +94,15 @@ class _FormSelectState extends State<FormSelect> {
       if (widget.service != null) {
         final _body = (extras != null)
             ? extras
-            : ((widget.extraParams != null) ? widget.extraParams : {});
-        final res = await http.post(Uri.encodeFull(widget.service),
-            body: json.encode(_body), headers: {"Accept": "application/json"});
-        final _itemData = json.decode(res.body)['items'];
+            : ((widget.extraParams != null) ? widget.extraParams : null);
+        var _res;
+        if(_body != null) {
+          FormData formData = new FormData.fromMap(_body);
+          _res = await _dio.post(widget.service, data: formData);
+        }else{
+          _res = await _dio.get(widget.service);
+        }
+        final _itemData = json.decode(_res.data)['items'];
         List<Map<String, String>> _resBody = [];
         if(_itemData is Map<String, dynamic>){
           _itemData.forEach((key, value) {
@@ -190,5 +153,10 @@ class _FormSelectState extends State<FormSelect> {
     } finally {
       _usersIsLoading = false;
     }
+  }
+  @override
+  void dispose() {
+    _dio.close();
+    super.dispose();
   }
 }
