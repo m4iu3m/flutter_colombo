@@ -1,8 +1,7 @@
 import 'dart:convert';
-import '../global.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:smart_select/smart_select.dart';
+import 'package:dio/dio.dart';
 
 // ignore: must_be_immutable
 class FormMultiSelect extends StatefulWidget {
@@ -36,6 +35,7 @@ class FormMultiSelect extends StatefulWidget {
 }
 
 class _FormMultiSelectState extends State<FormMultiSelect> {
+  final _dio = Dio();
   List<SmartSelectOption<String>> _items = [];
   bool _usersIsLoading;
   var _extraParams;
@@ -48,92 +48,38 @@ class _FormMultiSelectState extends State<FormMultiSelect> {
       }
     }
     return SmartSelect<String>.multiple(
-          title: (widget.labelText != null) ? widget.labelText : '',
-          value: widget.value,
-          isTwoLine: false,
-          options: _items,
-          modalType: (widget.typePopup != null)?widget.typePopup:SmartSelectModalType.bottomSheet,
-          modalConfig: SmartSelectModalConfig(
-            searchBarHint: (widget.searchBarHint != null)?widget.searchBarHint:'Tìm kiếm',
-            useHeader: (widget.showSearch != null)?widget.showSearch:false,
-            useFilter: (widget.showSearch != null)?widget.showSearch:false
-          ),
-          builder: (context, state, showOption) {
-            print(state.values);
-            return InkWell(
-              child: InputDecorator(
-                decoration: widget.decoration ??
-                _inputDecoration(
-                    hintText: widget.labelText,
-                    errorText: widget.errorText
-                ),
-                child: Row(
-                  children: <Widget>[
-                    (state.values.length > 2)?
-                    Container(
-                      margin: EdgeInsets.only(right: 5),
-                      padding: EdgeInsets.symmetric(vertical: 2, horizontal: 5),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        color: Color(0xffcccccc)
-                      ),
-                      child: Text('${(state.values.length > 10)?state.values.length.toString()+'+':state.values.length}'),
-                    ):Container(),
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        (state.values.length > 0)
-                            ? state.valueDisplay
-                            : state.title,
-                        //state.valueDisplay,
-                        style: TextStyle(
-                          fontSize:
-                          (fontSizeBase != null) ? fontSizeBase : 14.0,
-                          color: Colors.black,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      ),
-                    ),
-                    Icon(
-                      Icons.arrow_drop_down,
-                      color: Colors.black,
-                    )
-                  ],
-                ),
-              ),
+        title: (widget.labelText != null) ? widget.labelText : '',
+        value: widget.value,
+        isTwoLine: false,
+        options: _items,
+        modalType: (widget.typePopup != null)?widget.typePopup:SmartSelectModalType.bottomSheet,
+        modalConfig: SmartSelectModalConfig(
+          searchBarHint: (widget.searchBarHint != null)?widget.searchBarHint:'Tìm kiếm',
+          useHeader: (widget.showSearch != null)?widget.showSearch:false,
+          useFilter: (widget.showSearch != null)?widget.showSearch:false,
+        ),
+        builder: (context, state, showOption) {
+          return InkWell(
             onTap: () => showOption(context),
+            child: TextFormField(
+              controller: TextEditingController()..text =  state.valueTitle??null,
+              enabled: false,
+              maxLines: 1,
+              decoration:  widget.decoration ??
+                  InputDecoration(
+                      labelText:  state.title,
+                      errorText:  widget.errorText,
+                      border: UnderlineInputBorder(borderSide: BorderSide()),
+                      contentPadding: EdgeInsets.only(bottom: 2.0)
+                  ),
+            ),
           );
         },
         isLoading: _usersIsLoading,
         onChange: (val) {
-          (widget.onChange != null)
-              ? widget.onChange(val)
-              : setState(() => widget.value = val);
+          widget.onChange(val);
+          setState(() => widget.value = val);
         }
-    );
-  }
-  InputDecoration _inputDecoration({String hintText, String errorText}){
-    return InputDecoration(
-      hintText: hintText,
-      errorText: errorText,
-      contentPadding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(5)),
-        borderSide: BorderSide(color: Color(0xFFCCCCCC), width: 1),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(5)),
-        borderSide: BorderSide(color: Colors.blue, width: 1),
-      ),
-      focusedErrorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(5)),
-        borderSide: BorderSide(color: Colors.red, width: 1),
-      ),
-      errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(5)),
-        borderSide: BorderSide(color: Colors.red, width: 1),
-      ),
     );
   }
   @override
@@ -148,10 +94,15 @@ class _FormMultiSelectState extends State<FormMultiSelect> {
       if (widget.service != null) {
         final _body = (extras != null)
             ? extras
-            : ((widget.extraParams != null) ? widget.extraParams : {});
-        final res = await http.post(Uri.encodeFull(widget.service),
-            body: _body, headers: {"Accept": "application/json"});
-        final _itemData = json.decode(res.body)['items'];
+            : ((widget.extraParams != null) ? widget.extraParams : null);
+        var _res;
+        if(_body != null) {
+          FormData formData = new FormData.fromMap(_body);
+          _res = await _dio.post(widget.service, data: formData);
+        }else{
+          _res = await _dio.get(widget.service);
+        }
+        final _itemData = json.decode(_res.data)['items'];
         List<Map<String, String>> _resBody = [];
         if(_itemData is Map<String, dynamic>){
           _itemData.forEach((key, value) {
@@ -171,7 +122,7 @@ class _FormMultiSelectState extends State<FormMultiSelect> {
         List<SmartSelectOption> options =
         SmartSelectOption.listFrom<String, dynamic>(
           source: _resBody,
-          value: (index, item) => item['id'],
+          value: (index, item) => item['id'].toString(),
           title: (index, item) => item['title'],
         );
         setState(() => _items = options);
@@ -202,5 +153,10 @@ class _FormMultiSelectState extends State<FormMultiSelect> {
     } finally {
       _usersIsLoading = false;
     }
+  }
+  @override
+  void dispose() {
+    _dio.close();
+    super.dispose();
   }
 }

@@ -64,7 +64,6 @@ class FormGroup extends StatelessWidget{
                 text: ' (*)',
                 style: TextStyle(
                     fontStyle: FontStyle.italic,
-                    fontSize: fontSizeBase + 1,
                     color: Colors.red
                 ),
               )
@@ -76,7 +75,6 @@ class FormGroup extends StatelessWidget{
         this.title.toString(),
         style: TextStyle(
             fontWeight: (notBold == false)?FontWeight.w500:FontWeight.normal,
-            fontSize: fontSizeBase,
             color: Colors.black87
         ),
       );

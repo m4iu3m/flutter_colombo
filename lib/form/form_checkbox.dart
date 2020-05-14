@@ -44,7 +44,6 @@ class _FormCheckboxState extends State<FormCheckbox> {
             padding: EdgeInsets.only(top: 5, bottom: 5),
             child: Text(
               widget.label,
-              style: TextStyle(fontSize: fontSizeBase),
             ),
           ),
           SizedBox(
