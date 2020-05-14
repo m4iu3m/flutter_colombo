@@ -164,8 +164,8 @@ class _FormSelectState extends State<FormSelect> {
           title: (index, item) => item['title'],
         );
         setState(() {
+          _items = options;
           if(options.length < 10){
-            _items = options;
             _showSearch = false;
           }
         });
